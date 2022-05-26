@@ -1,0 +1,35 @@
+version: '3.1'
+services:
+  app:
+    container_name: web_server
+    build: ./server
+    restart: always
+    networks:
+      red_web:
+        ipv4_address: 192.168.10.10
+      red_interna:
+        ipv4_address: 192.168.20.10
+    hostname: web_server
+
+  db:
+    container_name: data_base
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: estructuras
+    restart: always
+    volumes:
+        - ./sql_script:/docker-entrypoint-initdb.d/
+    networks:
+      red_interna:
+        ipv4_address: 192.168.20.20
+    hostname: data_base
+
+networks:
+    red_web:
+        ipam:
+            config:
+              - subnet: 192.168.10.0/24
+    red_interna:
+        ipam:
+            config:
+              - subnet: 192.168.20.0/24
