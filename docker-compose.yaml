@@ -3,12 +3,15 @@ services:
   app:
     container_name: web_server
     build: ./server
-    restart: always
+    depends_on:
+      - db
     networks:
       red_web:
         ipv4_address: 192.168.10.10
       red_interna:
         ipv4_address: 192.168.20.10
+    ports:
+      - "30001:8005"
     hostname: web_server
 
   db:
@@ -16,12 +19,15 @@ services:
     image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: estructuras
-    restart: always
     volumes:
         - ./sql_script:/docker-entrypoint-initdb.d/
     networks:
       red_interna:
         ipv4_address: 192.168.20.20
+    ports:
+      - "30002:80"
+    depends on:
+      - app
     hostname: data_base
 
 networks:
