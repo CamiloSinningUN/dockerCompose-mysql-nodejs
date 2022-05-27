@@ -26,8 +26,6 @@ services:
         ipv4_address: 192.168.20.20
     ports:
       - "30002:80"
-    depends on:
-      - app
     hostname: data_base
 
 networks:
