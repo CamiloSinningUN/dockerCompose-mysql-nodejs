@@ -5,35 +5,18 @@ services:
     build: ./server
     depends_on:
       - db
-    networks:
-      red_web:
-        ipv4_address: 192.168.10.10
-      red_interna:
-        ipv4_address: 192.168.20.10
     ports:
-      - "30001:8005"
-    hostname: web_server
+      - "3001:8005"
 
+  # set up mysql database container
   db:
-    container_name: data_base
-    image: mysql
+    image: mysql:5.7
+    container_name: db
     environment:
       MYSQL_ROOT_PASSWORD: estructuras
+      MYSQL_DATABASE: proyecto
+      MYSQL_USER: my_user
+      MYSQL_PASSWORD: my_password
     volumes:
-        - ./sql_script:/docker-entrypoint-initdb.d/
-    networks:
-      red_interna:
-        ipv4_address: 192.168.20.20
-    ports:
-      - "30002:80"
-    hostname: data_base
-
-networks:
-    red_web:
-        ipam:
-            config:
-              - subnet: 192.168.10.0/24
-    red_interna:
-        ipam:
-            config:
-              - subnet: 192.168.20.0/24
+      - ./data:/var/lib/mysql
+    restart: always

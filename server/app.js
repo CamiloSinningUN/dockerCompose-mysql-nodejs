@@ -7,8 +7,7 @@ app.use(body_parser.urlencoded({extended:true}));
 const PORT = process.env.PORT || 8005;
 
 const connection = mysql.createConnection({
-    host     : 'data_base',
-    port     : 3306,
+    host     : 'db',
     user     : 'root',
     password : 'estructuras',
     database : 'proyecto'
