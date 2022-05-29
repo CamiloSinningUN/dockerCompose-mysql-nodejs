@@ -13,24 +13,23 @@ const connection = mysql.createConnection({
     database : 'proyecto'
 });
 
+//this method try to connect to the database until it is successful
 connection.connect(function(err) {
-    // en caso de error
-    if(err){
-        console.log(err.code);
-        console.log(err.fatal);
-        console.log('No fué posible conectarse a la base de datos')
-    }else {
-        console.log('Conexión a base de datos establecida')
+    if (err) {
+        //retry connection
+        console.log("Error connecting to the database");
+        setTimeout(connection.connect, 2000);
+    }else{
+        console.log('Conexión a base de datos establecida');
     }
 });
 
 // this method returns ok if the connection is established and nok if it is not
-app.get('/connection', (req, res) => {
-    if(connection.state === 'connected'){
-        res.send('ok')
-    }else {
-        res.send('nok')
-    }
+app.get("/connection", (req, res) => {     
+    connection.ping((err) => {
+        if(err) return res.send("nok");
+        res.send("ok");
+    })
 });
 
 // this method creates and user in the database
@@ -38,7 +37,7 @@ app.post('/addUser', (req, res) => {
     const {username, password, nrc} = req.body;
     connection.query(`INSERT INTO user (username, password, nrc) VALUES ('${username}', '${password}', '${nrc}')`, (err, result) => {
         if(err){
-            res.send('nok')
+            res.send(err)
         }else {
             res.send('ok')
         }
@@ -84,9 +83,9 @@ app.use((_, res, next) => {
     res.status(404);
 });
 
-connection.end(function(){
-    console.log('Conneción terminada');
-});
+// connection.end(function(){
+//     console.log('Conneción terminada');
+// });
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
