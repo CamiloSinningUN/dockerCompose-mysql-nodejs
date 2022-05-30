@@ -14,10 +14,8 @@ services:
     image: mysql:5.7
     container_name: db
     environment:
-      MYSQL_ROOT_PASSWORD: estructuras
+      MYSQL_ROOT_PASSWORD: 123
       MYSQL_DATABASE: proyecto
-      MYSQL_USER: my_user
-      MYSQL_PASSWORD: my_password
     volumes:
-      - ./data:/var/lib/mysql
+      - "./sql_script/start.sql:/docker-entrypoint-initdb.d/database.sql"
     restart: always
