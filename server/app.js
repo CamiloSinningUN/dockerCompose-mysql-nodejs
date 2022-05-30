@@ -7,7 +7,7 @@ const { read } = require("fs");
 app.use(express.json());
 app.use(require("morgan")("dev"));
 app.use(body_parser.json());
-const PORT = process.env.PORT || 8005;
+const PORT = process.env.PORT || 3001;
 
 const connection = mysql.createConnection({
   host: "db",
@@ -17,16 +17,23 @@ const connection = mysql.createConnection({
 });
 
 //this method try to connect to the database until it is successful
-connection.connect(function (err) {
-  if (err) {
-    //retry connection
-    console.log("Error connecting to the database");
-    setTimeout(connection.connect, 2000);
-  } else {
-    console.log("Conexión a base de datos establecida");
-  }
-});
+function connect(){
+  connection.connect(function (err) {
+    if (err) {
+      //retry connection
+      console.log("Error connecting to the database");
+      console.log("Trying to reconnect...");
+      setTimeout(connect, 5000);
+    } else {
+      console.log("Conexión a base de datos establecida");
+    }
+  });
+}
+
+connect();
+
 const query = util.promisify(connection.query).bind(connection);
+
 // this method returns ok if the connection is established and nok if it is not
 app.get("/connection", (req, res) => {
   connection.ping((err) => {
@@ -93,29 +100,39 @@ app.post("/addusers", async (req, res) => {
   const users = req.body;
   console.log(users);
   let object = { exist: false };
-  users.forEach(async (i) => {
+
+  for (const i of users){
     //verify the user does not exist
     try {
-      const user = await connection.query(
-        `SELECT * FROM user WHERE username = ${i.username}`
+      const user = await query(
+        `SELECT * FROM user WHERE username = '${i.username}'`
       );
-      if (user) object.exist = True;
+      console.log(user.length, undefined>0);
+      if (user.length > 0){
+        object.exist = true;
+      }
     } catch (error) {
+      console.log('errorsito', error);
       return res.send("nok");
     }
-  });
+  }
 
   if (!object.exist) {
     users.forEach(async (i) => {
       try {
-        await connection.query(
-          `INSERT INTO user (username, password, nrc) VALUES ('${i.username}', '${i.password}', ${i.nrc})`
+        await query(
+          `INSERT INTO user (username, password, nrc) VALUES ('${i.username}', '${i.password}', ${i.nrc});`
         );
-        res.send("ok");
       } catch (error) {
+        console.error(error);
+        console.log(i);
         res.send("nok");
+        return;
       }
     });
+    res.send("ok");
+  }else{
+    res.send("nok");
   }
 });
 
