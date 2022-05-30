@@ -1,0 +1,4 @@
+[{"username": "usuario100", "password": "con1", "nrc": 123},
+ {"username": "usuario200", "password": "con2", "nrc": 123},
+ {"username": "usuario300", "password": "con3", "nrc": 124},
+ {"username": "usuario400", "password": "con4", "nrc": 124}]

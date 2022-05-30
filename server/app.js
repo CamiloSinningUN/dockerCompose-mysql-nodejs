@@ -17,20 +17,20 @@ const connection = mysql.createConnection({
 });
 
 //this method try to connect to the database until it is successful
-function connect(){
+
   connection.connect(function (err) {
     if (err) {
       //retry connection
       console.log("Error connecting to the database");
       console.log("Trying to reconnect...");
-      setTimeout(connect, 5000);
+      setTimeout(connection.connect, 5000);
     } else {
       console.log("Conexión a base de datos establecida");
     }
   });
-}
 
-connect();
+
+
 
 const query = util.promisify(connection.query).bind(connection);
 
@@ -79,7 +79,11 @@ app.post("/authenticate", (req, res) => {
       if (err) {
         res.send("nok");
       } else {
-        res.send(result);
+	if (result.length > 0) {
+		res.send(result);
+	}else {
+		res.send('nok');
+	}
       }
     }
   );
