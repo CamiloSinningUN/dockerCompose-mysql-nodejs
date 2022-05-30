@@ -140,6 +140,17 @@ app.post("/addusers", async (req, res) => {
   }
 });
 
+app.get('/json', function (req, res) { 
+  connection.query('SELECT * FROM user', function(err, rows, fields)   
+  {   
+      if (err){
+        res.send('nok')
+      }else {
+        res.json(rows); 
+      }
+  });
+});
+
 app.use((_, res, next) => {
   res.status(404);
 });

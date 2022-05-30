@@ -50,6 +50,13 @@ El siguiente código permite agregar usuarios por medio de un archivo **json** e
 curl -X POST --header 'Content-Type: application/json' -d '@/home/leonardo/Documents/file.json' localhost:3001/addusers
 ```
 
+### Ejecución punto 5 alternativa
+
+Debido a que se puede presentar otra interpretación del enunciado del punto 5, en el que se deba generar un **JSON** con la información de la base de datos y enviarla al cliente, se decidió implementar esta función que recibe un json con la información de los usuarios.
+
+```
+curl -X GET localhost:3001/json
+```
 ## Autores ✒️
 
 * **Leonardo Aguilera**
