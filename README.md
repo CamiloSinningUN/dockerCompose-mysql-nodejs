@@ -59,9 +59,9 @@ curl -X GET localhost:3001/json
 ```
 ## Autores ✒️
 
-* **Leonardo Aguilera**
-* **Camilo Sinning** 
-* **Felipe de Lima** 
+* **Leonardo Aguilera** - [leoar0810](https://github.com/leoar0810)
+* **Camilo Sinning** - [CamiloSinningUN](https://github.com/CamiloSinningUN)
+* **Felipe de Lima** - [d3l1m](https://github.com/d3l1m)
 
 
 
